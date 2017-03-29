@@ -178,8 +178,6 @@ JNIEXPORT jstring Java_com_ffmpeg_test_MainActivity_codecinfo(JNIEnv *env, jobje
                 break;
         }
         sprintf(info, "%s[%10s] : %d\n", info, c_temp->name,c_temp->id);
-        int av = AV_PIX_FMT_YUYV422;
-        LOGE("hel: %d",av);
         c_temp=c_temp->next;
     }
     LOGE("%s", info);
