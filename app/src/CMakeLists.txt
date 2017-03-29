@@ -10,6 +10,9 @@ find_library( # Sets the name of the path variable.
               # Specifies the name of the NDK library that
               # you want CMake to locate.
               log )
+find_library(
+            android_lib
+            android)
 
 #set(distribution_DIR ${CMAKE_SOURCE_DIR}/main/libs)
 #set(PROJECT_BINARY_DIR ${CMAKE_SOURCE_DIR}/main/libs)
@@ -29,7 +32,7 @@ add_library( helloworld
              main/jni/simplest_ffmpeg_helloworld.c )
 
 include_directories(main/jni/include)
-
+set(LIBRARY_DEPS GLESv2 android log EGL)
 #target_include_directories(native-lib PRIVATE libs/include)
 target_link_libraries(helloworld ffmpeg
-                       ${log-lib} )
+                       ${log-lib} android)
