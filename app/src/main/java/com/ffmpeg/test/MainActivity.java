@@ -33,8 +33,6 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String input = new File(Environment.getExternalStorageDirectory(),"begin.mp4").getAbsolutePath();
-                Log.d("lichuang",input);
                 infoText.setText(codecinfo()+"");
             }
         });
@@ -46,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
     public native String codecinfo();
 
     static{
-        System.loadLibrary("ffmpeg");
+        System.loadLibrary("ijkffmpeg");
         System.loadLibrary("helloworld");
     }
 
@@ -55,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         new Thread(new Runnable() {
             @Override
             public void run() {
-                avcodecinfo("/storage/emulated/0/sintel.mov",mHolder.getSurface());
+                avcodecinfo("/storage/emulated/0/video.mp4",mHolder.getSurface());
             }
         }).start();
     }

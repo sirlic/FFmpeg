@@ -23,7 +23,7 @@ add_library( ffmpeg
              IMPORTED)
 set_target_properties( ffmpeg
                        PROPERTIES IMPORTED_LOCATION
-                       ${CMAKE_CURRENT_SOURCE_DIR}/main/libs/armeabi-v7a/libffmpeg.so)
+                       ${CMAKE_CURRENT_SOURCE_DIR}/main/libs/armeabi-v7a/libijkffmpeg.so)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
 
