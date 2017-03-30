@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         new Thread(new Runnable() {
             @Override
             public void run() {
-                avcodecinfo("/storage/emulated/0/video.mp4",mHolder.getSurface());
+                avcodecinfo("/storage/emulated/0/begin.mp4",mHolder.getSurface());
             }
         }).start();
     }

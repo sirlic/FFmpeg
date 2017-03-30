@@ -29,9 +29,11 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
 
 add_library( helloworld
              SHARED
-             main/jni/simplest_ffmpeg_helloworld.c )
+             main/jni/simplest_ffmpeg_helloworld.c /
+             main/jni/log/log.c)
 
 include_directories(main/jni/include)
+include_directories(main/jni/log/include)
 set(LIBRARY_DEPS GLESv2 android log EGL)
 #target_include_directories(native-lib PRIVATE libs/include)
 target_link_libraries(helloworld ffmpeg

@@ -14,6 +14,7 @@
 #include <android/native_window.h>
 #include <android/native_window_jni.h>
 #include <libavutil/imgutils.h>
+#include <log.h>
 
 #define LOGE(format, ...)  __android_log_print(ANDROID_LOG_ERROR, "(>_<)", format, ##__VA_ARGS__)
 #else
@@ -23,7 +24,6 @@
 
 //FIX
 struct URLProtocol;
-char* getAVPictureType(enum AVPictureType type);
 
 JNIEXPORT jint Java_com_ffmpeg_test_MainActivity_avcodecinfo(JNIEnv *env, jobject obj, jstring url, jobject surface)
 {
@@ -62,6 +62,7 @@ JNIEXPORT jint Java_com_ffmpeg_test_MainActivity_avcodecinfo(JNIEnv *env, jobjec
     AVCodecContext  * pCodecCtx = pFormatCtx->streams[videoStream]->codec;
     // Find the decoder for the video stream
     AVCodec * pCodec = avcodec_find_decoder(pCodecCtx->codec_id);
+    LOGE("解码类型：%d, %s",pCodecCtx->codec_id,getAVCodecIDLog(pCodecCtx->codec_id));
     if(pCodec==NULL) {
         LOGE("Codec not found. %d  %s" ,pCodecCtx->codec_id,pCodecCtx->codec_name);
         return -1; // Codec not found
@@ -117,7 +118,7 @@ JNIEXPORT jint Java_com_ffmpeg_test_MainActivity_avcodecinfo(JNIEnv *env, jobjec
             avcodec_decode_video2(pCodecCtx, pFrame, &frameFinished, &packet);
             // 并不是decode一次就可解码出一帧
             if (frameFinished) {
-                LOGE("第%d帧, 图像格式：%d, 帧类型：%s",frameCount,pFrame->format,getAVPictureType(pFrame->pict_type));
+                LOGE("第%d帧, 图像格式：%d:%s, 帧类型：%s",frameCount,pFrame->format,getAVPixelFormatLog(pFrame->format),getAVPictureTypeLog(pFrame->pict_type));
                 frameCount++;
                 // lock native window buffer
                 ANativeWindow_lock(nativeWindow, &windowBuffer, 0);
@@ -183,35 +184,4 @@ JNIEXPORT jstring Java_com_ffmpeg_test_MainActivity_codecinfo(JNIEnv *env, jobje
     LOGE("%s", info);
 
     return (*env)->NewStringUTF(env, info);
-}
-
-char* getAVPictureType(enum AVPictureType type) {
-    char *string;
-    switch (type) {
-        case AV_PICTURE_TYPE_NONE:
-            string = "NONE";
-            break;
-        case AV_PICTURE_TYPE_I:
-            string = "I";
-            break;
-        case AV_PICTURE_TYPE_P:
-            string = "P";
-            break;
-        case AV_PICTURE_TYPE_B:
-            string = "B";
-            break;
-        case AV_PICTURE_TYPE_S:
-            string = "S";
-            break;
-        case AV_PICTURE_TYPE_SI:
-            string = "SI";
-            break;
-        case AV_PICTURE_TYPE_SP:
-            string = "SP";
-            break;
-        case AV_PICTURE_TYPE_BI:
-            string = "BI";
-            break;
-    }
-    return string;
 }
