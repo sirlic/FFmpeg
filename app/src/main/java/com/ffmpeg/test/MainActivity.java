@@ -1,5 +1,6 @@
 package com.ffmpeg.test;
 
+import android.Manifest;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,8 +12,13 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.tbruyelle.rxpermissions.RxPermissions;
 
 import java.io.File;
+
+import rx.Observer;
 
 public class MainActivity extends AppCompatActivity implements SurfaceHolder.Callback {
 
@@ -34,8 +40,10 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
             @Override
             public void onClick(View v) {
                 infoText.setText(codecinfo()+"");
+                start();
             }
         });
+
     }
 
 
@@ -50,12 +58,38 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                avcodecinfo("/storage/emulated/0/begin.mp4",mHolder.getSurface());
-            }
-        }).start();
+        start();
+    }
+
+    private void start() {
+        RxPermissions.getInstance(this)
+                .request(Manifest.permission.READ_EXTERNAL_STORAGE)
+                .subscribe(new Observer<Boolean>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(Boolean aBoolean) {
+                        if (aBoolean) {
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    avcodecinfo("/storage/emulated/0/begin.mp4",mHolder.getSurface());
+                                }
+                            }).start();
+                        } else {
+                            Toast.makeText(MainActivity.this,"请打开存储卡权限",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
     }
 
     @Override

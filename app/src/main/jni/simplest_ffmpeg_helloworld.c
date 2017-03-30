@@ -91,6 +91,9 @@ JNIEXPORT jint Java_com_ffmpeg_test_MainActivity_avcodecinfo(JNIEnv *env, jobjec
         LOGE("Could not allocate video frame.");
         return -1;
     }
+    char info[40000] = { 0 };
+    av_dump_format(pFormatCtx,0,info,1);
+    LOGE("%s",info);
     // Determine required buffer size and allocate buffer
     // buffer中数据就是用于渲染的,且格式为RGBA
     int numBytes=av_image_get_buffer_size(AV_PIX_FMT_RGBA, pCodecCtx->width, pCodecCtx->height, 1);
